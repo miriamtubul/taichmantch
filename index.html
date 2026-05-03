@@ -367,7 +367,7 @@
 // ====================================================
 // הדביקו כאן את ה-URL מ-Google Apps Script (Deploy → Web App)
 // ====================================================
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby94r0z4v08BH_EgbfJa4eD8oElvdjHCaQa8ldY-JD--IT67dKcOmSvxjXvfvuGHXyM/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv8GdL8kj_Of7lRHtF0iXSMTSpV0H_mS1mva8S-GpUqQP71ir0KI7jSjEsB-j0ue0R/exec";
 
 var SALAD_NAMES = ['להבת הסלמון','מטיאס ים תיכוני','סלמון סקין','מטיאס חרדלי'];
 
@@ -407,8 +407,8 @@ function sendOrderWeb(e) {
 
   // ולידציה
   if (!name) { alert('אנא הזינו שם מלא.'); document.getElementById('f-name').focus(); return; }
-  if (!phone) { alert('אנא הזינו מספר טלפון.'); document.getElementById('f-phone').focus(); return; }
-  if (!email) { alert('אנא הזינו כתובת מייל.'); document.getElementById('f-email').focus(); return; }
+  if (!phone || !/^0\d{8,9}$/.test(phone.replace(/[-\s]/g, ''))) { alert('אנא הזינו מספר טלפון תקין (לדוגמה: 0541234567).'); document.getElementById('f-phone').focus(); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('אנא הזינו כתובת מייל תקינה.'); document.getElementById('f-email').focus(); return; }
   if (!address) { alert('אנא הזינו כתובת מגורים.'); document.getElementById('f-address').focus(); return; }
   if (!pickup) { alert('אנא בחרו נקודת איסוף.'); document.getElementById('f-pickup').focus(); return; }
 
@@ -464,7 +464,7 @@ function sendOrderWeb(e) {
     document.getElementById('q4').textContent = '0';
     document.getElementById('order-total').style.display = 'none';
 
-    alert('ההזמנה נשלחה בהצלחה! נחזור אליכם בהקדם.');
+    alert('הזמנתך נשלחה בהצלחה!');
   })
   .catch(function() {
     alert('שגיאה בשליחת ההזמנה. אנא נסו שוב.');
