@@ -1,0 +1,382 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #2B3F5C; --navy-deep: #1F2E44;
+  --coral: #D96B5E; --coral-soft: #E8A096;
+  --cream: #F4EFE6; --cream-warm: #EDE6D6;
+  --paper: #FAF6ED; --ink: #1A1A1A; --ink-soft: #3A3A3A;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm); color: var(--ink); direction: rtl; }
+.inner { max-width: 1120px; margin: 0 auto; width: 100%; }
+
+/* ── Topbar ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(31,46,68,0.97); backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.topbar-main { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+.topbar-brand { display: flex; align-items: center; gap: 14px; }
+.topbar-logo { height: 58px; width: auto; border-radius: 8px; }
+.topbar-brand-name {
+  font-family: 'Frank Ruhl Libre', Georgia, serif;
+  font-size: 28px; font-weight: 700; color: var(--paper);
+  letter-spacing: 0.01em; line-height: 1;
+}
+.topbar-brand-sub {
+  font-size: 10px; letter-spacing: 0.2em; color: rgba(250,246,237,0.45);
+  font-weight: 500; margin-top: 3px;
+}
+.topbar-kosher-center {
+  height: 48px; width: auto; object-fit: contain; border-radius: 4px;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.topbar-sub { font-size: 11px; letter-spacing: 0.22em; color: rgba(250,246,237,0.5); font-weight: 500; white-space: nowrap; }
+.topbar-cta {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--coral); color: var(--paper);
+  padding: 9px 22px; border-radius: 100px;
+  font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+  transition: background .18s, box-shadow .18s;
+}
+.topbar-cta:hover { background: #c05a4e; box-shadow: 0 4px 16px rgba(217,107,94,0.45); }
+
+/* ── Hero ── */
+.hero {
+  background: var(--navy-deep);
+  padding: 64px 24px 72px;
+}
+.hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.hero-text { color: var(--paper); }
+.hero-eyebrow { font-size: 11px; letter-spacing: 0.32em; color: var(--coral-soft); font-weight: 600; margin-bottom: 18px; }
+.hero-title {
+  font-family: 'Frank Ruhl Libre', Georgia, serif;
+  font-size: clamp(36px, 5vw, 64px); font-weight: 500; line-height: 1.1;
+  letter-spacing: -0.01em; margin-bottom: 20px;
+}
+.hero-title em { font-style: normal; color: var(--coral-soft); }
+.hero-desc { font-size: 16px; line-height: 1.7; color: rgba(250,246,237,0.72); margin-bottom: 32px; max-width: 420px; }
+.hero-tagline {
+  margin-top: 12px; margin-bottom: 0; max-width: 420px;
+}
+.hero-tagline-rule {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+}
+.hero-tagline-rule::before, .hero-tagline-rule::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,160,150,0.45), transparent);
+}
+.hero-tagline-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--coral-soft); opacity: 0.9;
+  box-shadow: 0 0 6px rgba(232,160,150,0.6);
+}
+.hero-tagline-text {
+  font-family: 'Heebo', system-ui, sans-serif;
+  font-size: 19px; font-weight: 300; line-height: 1.75;
+  color: rgba(250,246,237,0.88); letter-spacing: 0.07em;
+  text-align: center;
+}
+.hero-kosher {
+  display: block; margin: 20px auto 0; height: 52px; width: auto;
+  object-fit: contain; border-radius: 6px; opacity: 0.9;
+}
+.hero-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--coral); color: var(--paper);
+  padding: 16px 32px; border-radius: 100px;
+  font-size: 17px; font-weight: 600; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(217,107,94,0.4);
+  transition: transform .18s, box-shadow .18s;
+}
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(217,107,94,0.5); }
+.hero-phone { margin-top: 14px; font-size: 13px; color: rgba(250,246,237,0.45); letter-spacing: 0.08em; }
+.hero-img-wrap { position: relative; }
+.hero-img-circle {
+  position: absolute; top: -24px; right: -24px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: var(--coral); opacity: 0.15;
+}
+.hero-img { position: relative; z-index: 1; aspect-ratio: 4/5; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.35); }
+.hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-badge {
+  position: absolute; bottom: -28px; left: -28px; z-index: 2;
+  background: var(--paper); padding: 12px; border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(27,46,68,0.2);
+}
+.hero-badge img { width: 72px; height: 72px; object-fit: contain; display: block; }
+.hero-kosher-badge {
+  position: absolute; bottom: -18px; right: -18px; z-index: 2;
+  background: var(--paper); padding: 10px; border-radius: 50%;
+  box-shadow: 0 8px 28px rgba(27,46,68,0.28);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  width: 90px; height: 90px; justify-content: center;
+}
+.hero-kosher-badge img { width: 58px; height: 58px; object-fit: contain; display: block; border-radius: 50%; }
+
+
+/* ── Pillars ── */
+.pillars {
+  padding: 56px 24px 40px; background: var(--paper);
+}
+.pillars .inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.pillar { padding: 24px 24px 28px; background: var(--cream); border-radius: 4px; border-top: 3px solid var(--coral); }
+.pillar-num { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 40px; color: var(--coral); line-height: 1; margin-bottom: 10px; }
+.pillar-title { font-size: 17px; font-weight: 600; color: var(--navy-deep); margin-bottom: 8px; }
+.pillar-desc { font-size: 14px; line-height: 1.65; color: var(--ink-soft); }
+
+/* ── Menu ── */
+.menu-section { padding: 56px 24px 48px; background: var(--cream-warm); }
+.section-eyebrow { text-align: center; font-size: 11px; letter-spacing: 0.3em; color: var(--coral); font-weight: 600; margin-bottom: 12px; }
+.section-title { text-align: center; font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: clamp(30px, 4vw, 52px); font-weight: 500; margin-bottom: 36px; letter-spacing: -0.01em; color: var(--navy-deep); }
+.salad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 860px; margin: 0 auto; }
+
+/* ── Salad Card ── */
+.salad-card {
+  background: var(--paper); border-radius: 12px; overflow: visible;
+  box-shadow: 0 2px 16px rgba(27,46,68,0.08);
+  transition: transform .2s, box-shadow .2s;
+}
+.salad-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(27,46,68,0.16); }
+.salad-img-wrap { position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 12px 12px 0 0; }
+.salad-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+.salad-card:hover .salad-img { transform: scale(1.04); }
+.salad-sticker {
+  position: absolute; bottom: -20px; left: 16px; z-index: 10;
+  transition: transform .25s;
+}
+.salad-card:hover .salad-sticker { transform: rotate(-7deg) scale(1.1); }
+.salad-body { padding: 32px 24px 24px; }
+.salad-header { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
+.salad-name { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 24px; font-weight: 500; color: var(--navy-deep); }
+.salad-tag { font-size: 10px; letter-spacing: 0.2em; font-weight: 700; }
+.salad-desc { font-size: 14px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 16px; }
+.salad-check { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+.salad-check input { display: none; }
+.check-box {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--c, var(--coral-soft));
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.salad-check input:checked + .check-box { background: var(--c, var(--coral)); border-color: var(--c, var(--coral)); }
+.salad-check input:checked + .check-box::after {
+  content: ''; display: block; width: 6px; height: 11px;
+  border: 2.5px solid white; border-top: none; border-right: none;
+  transform: rotate(-45deg) translateY(-2px);
+}
+.check-label { font-size: 14px; font-weight: 500; color: var(--navy); }
+
+/* ── Pricing ── */
+.pricing {
+  margin: 0 56px 0; padding: 28px 36px; background: var(--paper); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 40px;
+  border: 1px dashed rgba(43,63,92,0.25);
+}
+.pricing-text { font-size: 15px; color: var(--ink-soft); line-height: 1.65; text-align: center; }
+.pricing-text small { font-size: 13px; opacity: 0.75; display: block; margin-top: 4px; }
+.pricing-amounts { display: flex; gap: 28px; }
+.pricing-item { text-align: center; }
+.pricing-label { font-size: 11px; letter-spacing: 0.15em; color: var(--navy); opacity: 0.7; margin-bottom: 4px; }
+.pricing-label.coral { color: var(--coral); opacity: 1; font-weight: 700; }
+.pricing-amount { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 36px; font-weight: 500; line-height: 1; color: var(--navy-deep); }
+.pricing-amount.coral { color: var(--coral); }
+.pricing-divider { width: 1px; background: var(--navy); opacity: 0.2; }
+/* ── Kosher Bar ── */
+.kosher-bar {
+  background: var(--paper);
+  border-top: 1px solid rgba(43,63,92,0.1);
+  border-bottom: 1px solid rgba(43,63,92,0.1);
+  padding: 18px 24px;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+}
+.kosher-bar-img { height: 56px; width: auto; object-fit: contain; }
+.kosher-bar-text { display: flex; flex-direction: column; gap: 2px; }
+.kosher-bar-title { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 18px; font-weight: 700; color: var(--navy-deep); letter-spacing: 0.02em; }
+.kosher-bar-sub { font-size: 12px; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.06em; }
+
+/* ── Order Form ── */
+.order-section { padding: 56px 24px 64px; background: var(--paper); }
+.order-card {
+  max-width: 680px; margin: 0 auto;
+  background: var(--cream); border-radius: 14px; padding: 44px 48px;
+  box-shadow: 0 4px 32px rgba(27,46,68,0.1); border: 1px solid rgba(43,63,92,0.07);
+}
+.order-title { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 32px; font-weight: 500; color: var(--navy-deep); margin-bottom: 6px; }
+.order-sub { font-size: 14px; color: var(--ink-soft); margin-bottom: 32px; line-height: 1.55; }
+.form-row { margin-bottom: 20px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; letter-spacing: 0.04em; }
+.form-input {
+  width: 100%; padding: 13px 16px;
+  background: var(--paper); border: 1.5px solid rgba(43,63,92,0.18);
+  border-radius: 8px; font-family: 'Heebo', system-ui, sans-serif;
+  font-size: 15px; color: var(--ink); direction: rtl;
+  transition: border-color .15s, box-shadow .15s; outline: none;
+}
+.form-input:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(217,107,94,0.14); }
+.form-input::placeholder { color: rgba(58,58,58,0.35); }
+.form-section-label { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 14px; letter-spacing: 0.04em; padding-bottom: 8px; border-bottom: 1px solid rgba(43,63,92,0.1); }
+.salad-picks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.salad-pick {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; background: var(--paper); border-radius: 8px;
+  border: 1.5px solid rgba(43,63,92,0.1); cursor: pointer; user-select: none;
+  transition: border-color .15s, background .15s;
+}
+.salad-pick:has(input:checked) { background: rgba(217,107,94,0.06); }
+.salad-pick input { display: none; }
+.pick-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 2px solid rgba(43,63,92,0.25);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.salad-pick input:checked + .pick-box { background: var(--coral); border-color: var(--coral); }
+.salad-pick input:checked + .pick-box::after {
+  content: ''; display: block; width: 5px; height: 10px;
+  border: 2.5px solid white; border-top: none; border-right: none;
+  transform: rotate(-45deg) translateY(-2px);
+}
+.pick-name { font-size: 14px; font-weight: 500; color: var(--navy-deep); }
+.form-note { font-size: 12px; color: rgba(58,58,58,0.55); margin-top: 6px; }
+
+/* ── Qty table ── */
+.qty-table { display: flex; flex-direction: column; gap: 10px; }
+.qty-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; background: var(--paper); border-radius: 10px;
+  border: 1.5px solid rgba(43,63,92,0.1);
+  border-right: 4px solid var(--c, var(--coral));
+  transition: background .15s;
+}
+.qty-row--special {
+  background: rgba(217,107,94,0.06);
+  border-color: rgba(43,63,92,0.1);
+  border-right-color: var(--coral);
+  margin-top: 4px;
+}
+.qty-name { font-size: 15px; font-weight: 500; color: var(--navy-deep); }
+.qty-price-tag {
+  font-size: 12px; font-weight: 700; color: var(--coral);
+  background: rgba(217,107,94,0.1); padding: 2px 8px; border-radius: 20px;
+  margin-right: 8px;
+}
+.qty-ctrl { display: flex; align-items: center; gap: 0; }
+.qty-btn {
+  width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(43,63,92,0.2);
+  background: var(--paper); color: var(--navy-deep);
+  font-size: 18px; font-weight: 400; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.qty-btn:hover { background: var(--coral); color: white; border-color: var(--coral); }
+.qty-val {
+  min-width: 36px; text-align: center;
+  font-family: 'Frank Ruhl Libre', Georgia, serif;
+  font-size: 20px; font-weight: 500; color: var(--navy-deep);
+}
+.order-total {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20px; padding: 14px 20px;
+  background: var(--navy-deep); border-radius: 10px;
+}
+.order-total-label { font-size: 14px; font-weight: 600; color: rgba(250,246,237,0.75); letter-spacing: 0.04em; }
+.order-total-amount { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 28px; font-weight: 700; color: var(--coral); }
+.submit-row { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+.form-submit {
+  width: 100%; padding: 17px;
+  background: var(--coral); color: var(--paper); border: none; border-radius: 100px;
+  font-family: 'Heebo', system-ui, sans-serif; font-size: 17px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+  text-decoration: none; box-shadow: 0 6px 20px rgba(217,107,94,0.35);
+  transition: background .18s, transform .18s, box-shadow .18s;
+}
+.form-submit-alt {
+  width: 100%; padding: 17px;
+  background: transparent; color: var(--navy-deep); border: 2px solid var(--navy);
+  border-radius: 100px; font-family: 'Heebo', system-ui, sans-serif; font-size: 17px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+  text-decoration: none; transition: background .18s, color .18s;
+}
+.form-submit-alt:hover { background: var(--navy); color: var(--paper); }
+.form-submit:hover { background: #c05a4e; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(217,107,94,0.45); }
+
+/* ── CTA ── */
+.cta-section { padding: 72px 24px; text-align: center; background: linear-gradient(180deg, var(--cream-warm) 0%, var(--paper) 100%); }
+.cta-logo { height: 80px; width: auto; margin: 0 auto 20px; display: block; opacity: 0.9; }
+.cta-title { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: clamp(32px, 4vw, 48px); font-weight: 500; color: var(--navy-deep); margin-bottom: 12px; letter-spacing: -0.01em; }
+.cta-desc { font-size: 15px; color: var(--ink-soft); line-height: 1.65; max-width: 480px; margin: 0 auto 28px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--coral); color: var(--paper);
+  padding: 20px 44px; border-radius: 100px;
+  font-size: 20px; font-weight: 600; text-decoration: none;
+  box-shadow: 0 10px 28px rgba(217,107,94,0.38);
+  transition: transform .18s, box-shadow .18s;
+}
+.cta-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(217,107,94,0.48); }
+.cta-note { margin-top: 20px; font-size: 13px; color: var(--navy); opacity: 0.65; letter-spacing: 0.06em; }
+
+/* ── Footer ── */
+.footer { background: var(--navy); padding: 0 0 16px; }
+.footer-ornament { width: 100%; overflow: hidden; line-height: 0; }
+.footer-copy { text-align: center; color: var(--paper); opacity: 0.55; font-size: 11px; letter-spacing: 0.25em; margin-top: 10px; padding-bottom: 8px; }
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  /* Topbar */
+  .topbar-main { padding: 8px 14px; }
+  .topbar-logo { height: 40px; border-radius: 6px; }
+  .topbar-brand-name { font-size: 18px; }
+  .topbar-brand-sub { font-size: 9px; }
+  .topbar-brand { gap: 8px; }
+  .topbar-kosher-center { height: 36px; }
+  .topbar-cta { padding: 7px 12px; font-size: 13px; }
+
+  /* Hero */
+  .hero { padding: 32px 18px 56px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+  .hero-text { text-align: center; }
+  .hero-eyebrow { text-align: center; }
+  .hero-title { font-size: clamp(32px, 8vw, 48px); text-align: center; }
+  .hero-tagline { margin: 0 auto; }
+  .hero-tagline-text { text-align: center; }
+  .hero-desc { font-size: 15px; text-align: center; margin-left: auto; margin-right: auto; }
+  .hero-btn { padding: 14px 24px; font-size: 15px; width: 100%; justify-content: center; }
+  .hero-img-circle { width: 100px; height: 100px; top: -16px; right: -12px; }
+  .hero-badge { bottom: -18px; left: -12px; }
+  .hero-badge img { width: 52px; height: 52px; }
+  .hero-kosher-badge { bottom: -14px; right: -10px; width: 70px; height: 70px; padding: 8px; }
+  .hero-kosher-badge img { width: 44px; height: 44px; }
+
+  /* Pillars */
+  .pillars { padding: 32px 18px 20px; }
+  .pillars .inner { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Menu */
+  .menu-section { padding: 32px 18px; }
+  .salad-grid { grid-template-columns: 1fr; gap: 36px; }
+  .salad-name { font-size: 20px; }
+  .salad-sticker { bottom: -14px; left: 10px; }
+  .salad-sticker svg { width: 78px; height: 78px; }
+
+  /* Pricing */
+  .pricing { flex-direction: column; align-items: center; margin: 0 18px; padding: 18px 20px; gap: 14px; }
+  .pricing-amounts { gap: 20px; }
+  .pricing-amount { font-size: 28px; }
+
+  /* Order form */
+  .order-section { padding: 32px 18px 48px; }
+  .order-card { padding: 24px 16px; }
+  .order-title { font-size: 24px; }
+  .qty-name { font-size: 14px; }
+  .qty-btn { width: 30px; height: 30px; font-size: 16px; }
+  .qty-val { font-size: 17px; min-width: 30px; }
+  .form-submit, .form-submit-alt { font-size: 15px; padding: 15px; }
+  .salad-picks { grid-template-columns: 1fr; }
+
+  /* CTA */
+  .cta-section { padding: 44px 18px; }
+  .cta-title { font-size: clamp(24px, 7vw, 36px); }
+}
