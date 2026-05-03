@@ -16,6 +16,11 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .topbar-main { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+.topbar-center {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 12px; letter-spacing: 0.18em; color: rgba(250,246,237,0.5);
+  font-weight: 400; white-space: nowrap; pointer-events: none;
+}
 .topbar-brand { display: flex; align-items: center; gap: 14px; }
 .topbar-logo { height: 58px; width: auto; border-radius: 8px; }
 .topbar-brand-name {
@@ -260,7 +265,7 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
 .qty-price-tag {
   font-size: 12px; font-weight: 700; color: var(--coral);
   background: rgba(217,107,94,0.1); padding: 2px 8px; border-radius: 20px;
-  margin-right: 8px;
+  margin-right: 8px; white-space: nowrap;
 }
 .qty-ctrl { display: flex; align-items: center; gap: 0; }
 .qty-btn {
@@ -302,6 +307,19 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
 .form-submit-alt:hover { background: var(--navy); color: var(--paper); }
 .form-submit:hover { background: #c05a4e; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(217,107,94,0.45); }
 
+/* ── Payment Notice ── */
+.payment-notice {
+  margin-top: 20px; padding: 16px 20px;
+  background: rgba(43,63,92,0.06); border-radius: 10px;
+  border: 1.5px solid rgba(43,63,92,0.12);
+  font-size: 14px; line-height: 1.7; color: var(--ink-soft); text-align: center;
+}
+.payment-notice-title {
+  font-weight: 700; color: var(--navy-deep); font-size: 13px;
+  letter-spacing: 0.08em; margin-bottom: 6px;
+}
+.payment-notice strong { color: var(--navy-deep); }
+
 /* ── CTA ── */
 .cta-section { padding: 72px 24px; text-align: center; background: linear-gradient(180deg, var(--cream-warm) 0%, var(--paper) 100%); }
 .cta-logo { height: 80px; width: auto; margin: 0 auto 20px; display: block; opacity: 0.9; }
@@ -333,6 +351,7 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
   .topbar-brand { gap: 8px; }
   .topbar-kosher-center { height: 36px; }
   .topbar-cta { padding: 7px 12px; font-size: 13px; }
+  .topbar-center { display: none; }
 
   /* Hero */
   .hero { padding: 32px 18px 56px; }
