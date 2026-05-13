@@ -17,7 +17,7 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
 
     // חישוב סה"כ פריטים
-    var totalItems = (data.q0 || 0) + (data.q1 || 0) + (data.q2 || 0) + (data.q3 || 0) + (data.q4 || 0);
+    var totalItems = (data.q0 || 0) + (data.q1 || 0) + (data.q2 || 0) + (data.q3 || 0) + (data.q4 || 0) * 4;
 
     // חישוב תאריך איסוף (יום שישי הקרוב)
     var now = new Date();

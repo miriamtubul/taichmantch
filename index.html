@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>טייכמאנצ · סלטי דגים ביתיים</title>
+<title>טייכמאנצ' · סלטי דגים ביתיים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Frank+Ruhl+Libre:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
     <div class="topbar-brand">
       <img src="pictures/לוגו סופי-02.jpg" class="topbar-logo" alt="טייכמאנצ לוגו" />
       <div>
-        <div class="topbar-brand-name">טייכמאנצ</div>
+        <div class="topbar-brand-name">טייכמאנצ'</div>
         <div class="topbar-brand-sub">גיל טייכמן · סלטי דגים</div>
       </div>
     </div>
@@ -31,11 +31,12 @@
   <div class="inner hero-inner">
     <div class="hero-text">
       <div class="hero-eyebrow">גיל טייכמן · מושב תקומה</div>
-      <h1 class="hero-title">השבת שלכם<br/>הולכת<br/><em>להיראות אחרת.</em></h1>
+      <h1 class="hero-title">השבת שלכם<br/>הולכת<br/><em>להיראות אחרת</em></h1>
       <div class="hero-tagline">
         <div class="hero-tagline-rule"><span class="hero-tagline-dot"></span></div>
         <p class="hero-tagline-text">סלטי דגים בעבודת יד<br/>מחומרי הגלם הטובים ביותר<br/>ובתיבול מדויק</p>
         <img src="pictures/כשרות.jpg" alt="כשר למהדרין" class="hero-kosher" />
+        <a href="#order" class="hero-btn">להזמנה עכשיו ←</a>
       </div>
     </div>
     <div class="hero-img-wrap">
@@ -228,7 +229,7 @@
     </div>
     <div class="form-row">
       <label class="form-label" for="f-pickup">נקודת איסוף</label>
-      <select class="form-input" id="f-pickup">
+      <select class="form-input" id="f-pickup" onchange="updateTotal()">
         <option value="" disabled selected>בחרו נקודת איסוף...</option>
         <option value="שערי תקווה">שערי תקווה</option>
         <option value="רעננה">רעננה</option>
@@ -236,7 +237,9 @@
         <option value="אבן שמואל">אבן שמואל</option>
         <option value="תקומה">תקומה</option>
         <option value="צומת יד מרדכי">צומת יד מרדכי</option>
+        <option value="משלוח עד הבית">משלוח עד הבית (+30 ₪)</option>
       </select>
+      <p class="pickup-note">נקודות האיסוף מתעדכנות בהתאם לביקוש — כל יישוב שממנו יגיעו יותר מ-5 סטים יהפוך לנקודת איסוף נוספת.</p>
     </div>
     <div class="form-row">
       <div class="form-section-label">בחירת סלטים · 35 ₪ ליחידה</div>
@@ -278,7 +281,7 @@
     </div>
     <div class="payment-notice">
       <p>יש להעביר תשלום למספר<br/>
-      <span dir="ltr">054-779-2925</span> (גיל טייכמן)<br/>
+      <a href="https://wa.me/972547792925" class="whatsapp-link" target="_blank" rel="noopener"><span dir="ltr">054-779-2925</span></a> (גיל טייכמן)<br/>
       בביט או בפייבוקס.<br/>
       <strong>ההזמנה תיכנס לתוקף רק לאחר העברת התשלום.</strong></p>
     </div>
@@ -357,7 +360,7 @@
     <p style="margin:8px 0;line-height:1.7;text-align:right">
       האתר אוסף שם מלא, מספר טלפון, כתובת מייל וכתובת מגורים לצורך טיפול בהזמנות בלבד.<br/>
       המידע נאסף ונשמר אצל בעל העסק, גיל טייכמן, בלבד ואינו מועבר לצד שלישי.<br/>
-      לכל שאלה או בקשה למחיקת מידע ניתן לפנות אל: <span dir="ltr">054-779-2925</span>
+      לכל שאלה או בקשה למחיקת מידע ניתן לפנות אל: <a href="https://wa.me/972547792925" class="whatsapp-link" target="_blank" rel="noopener"><span dir="ltr">054-779-2925</span></a>
     </p>
   </details>
   <div class="footer-copy">2026 · Designed &amp; Built by <a href="https://www.linkedin.com/in/miriam-tubul" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;font-size:13px;opacity:1;letter-spacing:0.15em">Miriam Tubul</a></div>
@@ -385,6 +388,7 @@ function updateTotal() {
                  parseInt(document.getElementById('q3').textContent));
   var sets = parseInt(document.getElementById('q4').textContent);
   var total = singles * 35 + sets * 120;
+  if (document.getElementById('f-pickup').value === 'משלוח עד הבית') total += 30;
   var box = document.getElementById('order-total');
   var amt = document.getElementById('order-total-amount');
   if (total > 0) {
@@ -418,6 +422,7 @@ function sendOrderWeb(e) {
   var q3 = parseInt(document.getElementById('q3').textContent);
   var q4 = parseInt(document.getElementById('q4').textContent);
   var total = q0 * 35 + q1 * 35 + q2 * 35 + q3 * 35 + q4 * 120;
+  if (pickup === 'משלוח עד הבית') total += 30;
 
   if (total === 0) { alert('אנא בחרו לפחות סלט אחד.'); return; }
 
