@@ -242,8 +242,8 @@
       <p class="pickup-note">נקודות האיסוף מתעדכנות בהתאם לביקוש — כל יישוב שממנו יגיעו יותר מ-5 סטים יהפוך לנקודת איסוף נוספת.</p>
     </div>
     <div class="form-row">
-      <div class="form-section-label">בחירת סלטים · 35 ₪ ליחידה</div>
-      <div class="qty-table">
+      <div class="form-section-label" id="salads-label">בחירת סלטים · 35 ₪ ליחידה</div>
+      <div class="qty-table" id="salads-container">
         <div class="qty-row" style="--c:#D96B5E">
           <span class="qty-name">להבת הסלמון</span>
           <div class="qty-ctrl"><button type="button" class="qty-btn" onclick="changeQty('q0',-1)">−</button><span class="qty-val" id="q0">0</span><button type="button" class="qty-btn" onclick="changeQty('q0',1)">+</button></div>
@@ -261,7 +261,7 @@
           <div class="qty-ctrl"><button type="button" class="qty-btn" onclick="changeQty('q3',-1)">−</button><span class="qty-val" id="q3">0</span><button type="button" class="qty-btn" onclick="changeQty('q3',1)">+</button></div>
         </div>
         <div class="qty-row qty-row--special" style="--c:#D96B5E">
-          <span class="qty-name">רביעיית סלטים <span class="qty-price-tag">120&nbsp;₪</span></span>
+          <span class="qty-name">רביעיית סלטים <span class="qty-price-tag" id="set-price-tag">120&nbsp;₪</span></span>
           <div class="qty-ctrl"><button type="button" class="qty-btn" onclick="changeQty('q4',-1)">−</button><span class="qty-val" id="q4">0</span><button type="button" class="qty-btn" onclick="changeQty('q4',1)">+</button></div>
         </div>
       </div>
@@ -370,9 +370,90 @@
 // ====================================================
 // הדביקו כאן את ה-URL מ-Google Apps Script (Deploy → Web App)
 // ====================================================
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv8GdL8kj_Of7lRHtF0iXSMTSpV0H_mS1mva8S-GpUqQP71ir0KI7jSjEsB-j0ue0R/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTo5srHB2zfJ9L81RYeKbJ9rLZEnh6ra2nx9luu6AUpNmyIxiTTAz0SVbfLPAOZrVe/exec";
 
 var SALAD_NAMES = ['להבת הסלמון','מטיאס ים תיכוני','סלמון סקין','מטיאס חרדלי'];
+var SINGLE_PRICE = 35;
+var SET_PRICE = 120;
+var SALAD_COLORS = ['#D96B5E','#4A7FA5','#5A9E72','#C4873A','#8B6BAE','#4A9E8E','#C4A63A','#6B8ED9'];
+
+function buildSaladRow(id, name, price) {
+  var color = SALAD_COLORS[(parseInt(id.replace('q','')) || 0) % SALAD_COLORS.length];
+  return '<div class="qty-row" style="--c:' + color + '">' +
+    '<span class="qty-name">' + name + '</span>' +
+    '<div class="qty-ctrl">' +
+      '<button type="button" class="qty-btn" onclick="changeQty(\'' + id + '\',-1)">−</button>' +
+      '<span class="qty-val" id="' + id + '">0</span>' +
+      '<button type="button" class="qty-btn" onclick="changeQty(\'' + id + '\',1)">+</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function loadConfig() {
+  var cbName = '__gsConfig_' + Date.now();
+  var done = false;
+
+  var timer = setTimeout(function() {
+    if (!done) { done = true; delete window[cbName]; }
+  }, 5000); // אחרי 5 שניות — ממשיך עם ה-fallback הסטטי
+
+  window[cbName] = function(config) {
+    if (done) return;
+    done = true;
+    clearTimeout(timer);
+    delete window[cbName];
+    try { document.head.removeChild(script); } catch(e) {}
+    applyConfig(config);
+  };
+  var script = document.createElement('script');
+  script.src = GOOGLE_SCRIPT_URL + '?callback=' + cbName;
+  script.onerror = function() {
+    if (!done) { done = true; clearTimeout(timer); delete window[cbName]; }
+  };
+  document.head.appendChild(script);
+}
+
+function applyConfig(config) {
+      // עדכן מחירים גלובליים
+      if (config.singlePrice) SINGLE_PRICE = config.singlePrice;
+      if (config.setPrice)    SET_PRICE    = config.setPrice;
+
+      // עדכן תווית מחיר בכותרת
+      var label = document.getElementById('salads-label');
+      if (label) label.textContent = 'בחירת סלטים · ' + SINGLE_PRICE + ' ₪ ליחידה';
+
+      // עדכן תג מחיר על הרביעייה
+      var setTag = document.getElementById('set-price-tag');
+      if (setTag) setTag.innerHTML = SET_PRICE + '&nbsp;₪';
+
+      // עדכן נקודות איסוף
+      if (config.pickups && config.pickups.length) {
+        var select = document.getElementById('f-pickup');
+        select.innerHTML = '<option value="" disabled selected>בחרו נקודת איסוף...</option>';
+        config.pickups.forEach(function(p) {
+          var opt = document.createElement('option');
+          opt.value = p;
+          opt.textContent = p === 'משלוח עד הבית' ? p + ' (+30 ₪)' : p;
+          select.appendChild(opt);
+        });
+      }
+
+      // עדכן רשימת סלטים
+      if (config.salads && config.salads.length) {
+        var container = document.getElementById('salads-container');
+        // שמור את שורת הרביעייה (תמיד אחרונה)
+        var specialRow = container.querySelector('.qty-row--special');
+        container.innerHTML = '';
+        config.salads.forEach(function(name, i) {
+          container.innerHTML += buildSaladRow('q' + i, name, SINGLE_PRICE);
+        });
+        if (specialRow) container.appendChild(specialRow);
+        // עדכן SALAD_NAMES
+        SALAD_NAMES = config.salads;
+      }
+}
+
+document.addEventListener('DOMContentLoaded', loadConfig);
 
 function changeQty(id, delta) {
   var el = document.getElementById(id);
@@ -382,12 +463,15 @@ function changeQty(id, delta) {
 }
 
 function updateTotal() {
-  var singles = (parseInt(document.getElementById('q0').textContent) +
-                 parseInt(document.getElementById('q1').textContent) +
-                 parseInt(document.getElementById('q2').textContent) +
-                 parseInt(document.getElementById('q3').textContent));
-  var sets = parseInt(document.getElementById('q4').textContent);
-  var total = singles * 35 + sets * 120;
+  var singles = 0;
+  for (var i = 0; i < SALAD_NAMES.length; i++) {
+    var el = document.getElementById('q' + i);
+    if (el) singles += parseInt(el.textContent) || 0;
+  }
+  var sets = parseInt(document.getElementById('q4').textContent) || 0;
+  var autoSets = Math.floor(singles / 4);
+  var remainder = singles % 4;
+  var total = (autoSets + sets) * SET_PRICE + remainder * SINGLE_PRICE;
   if (document.getElementById('f-pickup').value === 'משלוח עד הבית') total += 30;
   var box = document.getElementById('order-total');
   var amt = document.getElementById('order-total-amount');
@@ -416,12 +500,17 @@ function sendOrderWeb(e) {
   if (!address) { alert('אנא הזינו כתובת מגורים.'); document.getElementById('f-address').focus(); return; }
   if (!pickup) { alert('אנא בחרו נקודת איסוף.'); document.getElementById('f-pickup').focus(); return; }
 
-  var q0 = parseInt(document.getElementById('q0').textContent);
-  var q1 = parseInt(document.getElementById('q1').textContent);
-  var q2 = parseInt(document.getElementById('q2').textContent);
-  var q3 = parseInt(document.getElementById('q3').textContent);
-  var q4 = parseInt(document.getElementById('q4').textContent);
-  var total = q0 * 35 + q1 * 35 + q2 * 35 + q3 * 35 + q4 * 120;
+  // אסוף כמויות דינמית לפי מספר הסלטים הנוכחי
+  var qtys = [];
+  for (var i = 0; i < SALAD_NAMES.length; i++) {
+    var el = document.getElementById('q' + i);
+    qtys.push(el ? parseInt(el.textContent) || 0 : 0);
+  }
+  var q4 = parseInt(document.getElementById('q4').textContent) || 0;
+  var singleCount = qtys.reduce(function(a, b) { return a + b; }, 0);
+  var autoSets = Math.floor(singleCount / 4);
+  var remainder = singleCount % 4;
+  var total = (autoSets + q4) * SET_PRICE + remainder * SINGLE_PRICE;
   if (pickup === 'משלוח עד הבית') total += 30;
 
   if (total === 0) { alert('אנא בחרו לפחות סלט אחד.'); return; }
@@ -439,14 +528,14 @@ function sendOrderWeb(e) {
     email: email,
     address: address,
     pickup: pickup,
-    q0: q0,
-    q1: q1,
-    q2: q2,
-    q3: q3,
     q4: q4,
     total: total,
-    notes: notes
+    notes: notes,
+    salads: SALAD_NAMES,
+    quantities: qtys
   };
+  // תאימות לאחור — שלח גם q0-q3 לגיליון הקיים
+  for (var j = 0; j < 4; j++) { orderData['q' + j] = qtys[j] || 0; }
 
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
@@ -462,10 +551,10 @@ function sendOrderWeb(e) {
     document.getElementById('f-address').value = '';
     document.getElementById('f-pickup').selectedIndex = 0;
     document.getElementById('f-notes').value = '';
-    document.getElementById('q0').textContent = '0';
-    document.getElementById('q1').textContent = '0';
-    document.getElementById('q2').textContent = '0';
-    document.getElementById('q3').textContent = '0';
+    for (var k = 0; k < SALAD_NAMES.length; k++) {
+      var qEl = document.getElementById('q' + k);
+      if (qEl) qEl.textContent = '0';
+    }
     document.getElementById('q4').textContent = '0';
     document.getElementById('order-total').style.display = 'none';
 

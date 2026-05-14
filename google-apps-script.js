@@ -62,9 +62,74 @@ function doPost(e) {
   }
 }
 
-// פונקציית בדיקה - אפשר להריץ מה-Editor כדי לוודא שהכל עובד
+// ==============================================
+// doGet — מחזיר הגדרות (סלטים + נקודות איסוף + מחירים) מגיליון "הגדרות"
+// מבנה הגיליון:
+//   שורה 1:  כותרות (A=נקודות איסוף, B=סלטים, C=מחיר יחיד, D=מחיר רביעייה)
+//   שורות 2+: ערכים (ניתן להוסיף/להסיר שורות)
+// ==============================================
 function doGet(e) {
-  return ContentService
-    .createTextOutput("Apps Script is running! Use POST to submit orders.")
-    .setMimeType(ContentService.MimeType.TEXT);
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('הגדרות');
+
+    if (!sheet) {
+      // אם הגיליון לא קיים — צור אותו עם ערכי ברירת מחדל
+      sheet = ss.insertSheet('הגדרות');
+      sheet.getRange('A1:D1').setValues([['נקודות איסוף', 'סלטים', 'מחיר יחיד', 'מחיר רביעייה']]);
+      sheet.getRange('A2:D2').setValues([['שערי תקווה', 'להבת הסלמון', 35, 120]]);
+      sheet.getRange('A3:B6').setValues([
+        ['רעננה',           'מטיאס ים תיכוני'],
+        ['אליאב',           'סלמון סקין'],
+        ['אבן שמואל',       'מטיאס חרדלי'],
+        ['תקומה',           ''],
+        ['צומת יד מרדכי',  ''],
+        ['משלוח עד הבית',  '']
+      ]);
+    }
+
+    var lastRow = sheet.getLastRow();
+    var pickups = [];
+    var salads = [];
+
+    if (lastRow >= 2) {
+      var dataA = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      var dataB = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+      dataA.forEach(function(row) { if (row[0]) pickups.push(row[0]); });
+      dataB.forEach(function(row) { if (row[0]) salads.push(row[0]); });
+    }
+
+    var singlePrice = sheet.getRange('C2').getValue() || 35;
+    var setPrice    = sheet.getRange('D2').getValue() || 120;
+
+    var config = {
+      pickups: pickups,
+      salads: salads,
+      singlePrice: Number(singlePrice),
+      setPrice: Number(setPrice)
+    };
+
+    // תמיכה ב-JSONP לעקיפת CORS
+    var cb = e && e.parameter && e.parameter.callback;
+    if (cb) {
+      return ContentService
+        .createTextOutput(cb + '(' + JSON.stringify(config) + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify(config))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    var cb = e && e.parameter && e.parameter.callback;
+    var errJson = JSON.stringify({ error: err.toString() });
+    if (cb) {
+      return ContentService
+        .createTextOutput(cb + '(' + errJson + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService
+      .createTextOutput(errJson)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
