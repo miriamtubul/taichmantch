@@ -115,8 +115,9 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
   width: 200px; height: 200px; border-radius: 50%;
   background: var(--coral); opacity: 0.15;
 }
-.hero-img { position: relative; z-index: 1; aspect-ratio: 4/5; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.35); }
-.hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-img { position: relative; z-index: 1; aspect-ratio: 4/5; border-radius: 14px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.35); background: var(--cream); }
+.hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .4s; }
+.hero-img img.loaded { opacity: 1; }
 .hero-badge {
   position: absolute; bottom: -28px; left: -28px; z-index: 2;
   background: var(--paper); padding: 12px; border-radius: 50%;
@@ -156,8 +157,9 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
   transition: transform .2s, box-shadow .2s;
 }
 .salad-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(27,46,68,0.16); }
-.salad-img-wrap { position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 12px 12px 0 0; }
-.salad-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+.salad-img-wrap { position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 12px 12px 0 0; background: var(--cream); }
+.salad-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s, opacity .4s; opacity: 0; }
+.salad-img.loaded { opacity: 1; }
 .salad-card:hover .salad-img { transform: scale(1.04); }
 .salad-sticker {
   position: absolute; bottom: -20px; left: 16px; z-index: 10;
