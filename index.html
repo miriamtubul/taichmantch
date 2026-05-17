@@ -395,27 +395,10 @@ function buildSaladRow(id, name, price) {
 }
 
 function loadConfig() {
-  var cbName = '__gsConfig_' + Date.now();
-  var done = false;
-
-  var timer = setTimeout(function() {
-    if (!done) { done = true; delete window[cbName]; }
-  }, 5000); // אחרי 5 שניות — ממשיך עם ה-fallback הסטטי
-
-  window[cbName] = function(config) {
-    if (done) return;
-    done = true;
-    clearTimeout(timer);
-    delete window[cbName];
-    try { document.head.removeChild(script); } catch(e) {}
-    applyConfig(config);
-  };
-  var script = document.createElement('script');
-  script.src = GOOGLE_SCRIPT_URL + '?callback=' + cbName + '&nocache=' + Date.now();
-  script.onerror = function() {
-    if (!done) { done = true; clearTimeout(timer); delete window[cbName]; }
-  };
-  document.head.appendChild(script);
+  fetch(GOOGLE_SCRIPT_URL + '?nocache=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(config) { applyConfig(config); })
+    .catch(function(err) { console.error('Config load failed:', err); });
 }
 
 function applyConfig(config) {
