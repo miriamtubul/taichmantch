@@ -42,10 +42,17 @@ O=שולם, P=נמסר, Q=נשלח לנקודת איסוף, R=תאריך איס�
 - משלוח עד הבית: +30 ₪
 - ספירת פריטים: כל סלט בודד = 1, כל רביעייה (q4) = 4
 
+## Cache-busting
+
+- `?v=X` מוצמד ישירות ב-HTML על CSS ותמונות (לא דרך JS!)
+- **אסור** לשנות src/href של תמונות או CSS דרך JavaScript — זה גורם לטעינה כפולה והבזק מכוער
+- כשמעדכנים CSS או תמונות: לשנות את `?v=2` ל-`?v=3` וכו׳ ישירות ב-HTML
+- המקומות לעדכן: תג `<link>` של style.css + כל תגי `<img>` ו-`<image>` עם `pictures/`
+
 ## טעינה דינמית
 
-- `loadConfig()` נקראת ב-DOMContentLoaded — טוענת config מ-Sheets ב-JSONP
-- timeout של 5 שניות — אם לא מגיע, ממשיך עם ה-HTML הסטטי כ-fallback
+- `loadConfig()` נקראת ב-DOMContentLoaded — טוענת config מ-Sheets ב-fetch
+- fallback: אם fetch נכשל, ערכים סטטיים מה-HTML נשארים
 - `applyConfig(config)` — מעדכנת סלטים, נקודות איסוף, מחירים
 - `buildSaladRow(id, name, price)` — בונה שורת סלט דינמית
 
