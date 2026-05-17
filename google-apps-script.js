@@ -78,7 +78,7 @@ function doGet(e) {
       sheet = ss.insertSheet('הגדרות');
       sheet.getRange('A1:D1').setValues([['נקודות איסוף', 'סלטים', 'מחיר יחיד', 'מחיר רביעייה']]);
       sheet.getRange('A2:D2').setValues([['שערי תקווה', 'להבת הסלמון', 35, 120]]);
-      sheet.getRange('A3:B6').setValues([
+      sheet.getRange('A3:B8').setValues([
         ['רעננה',           'מטיאס ים תיכוני'],
         ['אליאב',           'סלמון סקין'],
         ['אבן שמואל',       'מטיאס חרדלי'],
