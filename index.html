@@ -198,9 +198,9 @@
     <div class="pricing">
       <div class="pricing-text">ניתן להזמין מארז של ארבעה סלטים<br/>או סלטים בודדים.</div>
       <div class="pricing-amounts">
-        <div class="pricing-item"><div class="pricing-label">יחידה</div><div class="pricing-amount">35 ₪</div></div>
+        <div class="pricing-item"><div class="pricing-label">יחידה</div><div class="pricing-amount" id="pricing-single">35 ₪</div></div>
         <div class="pricing-divider"></div>
-        <div class="pricing-item"><div class="pricing-label coral">רביעייה</div><div class="pricing-amount coral">120 ₪</div></div>
+        <div class="pricing-item"><div class="pricing-label coral">רביעייה</div><div class="pricing-amount coral" id="pricing-set">120 ₪</div></div>
       </div>
     </div>
   </div>
@@ -373,7 +373,7 @@
 // ====================================================
 // הדביקו כאן את ה-URL מ-Google Apps Script (Deploy → Web App)
 // ====================================================
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzN9v2a6f9qLPvbwIKakHMb7tmKNHrtCmElYhLg9Os6bAR6L_HahIqZBMi3VyMQVUUj/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDTDnXkSnF84sv_FbdEQo-LjhCDRi3daGxqjPur0Ig19c8XTt6PsI7WW1vQpeH5bRi/exec";
 
 var SALAD_NAMES = ['להבת הסלמון','מטיאס ים תיכוני','סלמון סקין','מטיאס חרדלי'];
 var SINGLE_PRICE = 35;
@@ -409,7 +409,7 @@ function loadConfig() {
     applyConfig(config);
   };
   var script = document.createElement('script');
-  script.src = GOOGLE_SCRIPT_URL + '?callback=' + cbName;
+  script.src = GOOGLE_SCRIPT_URL + '?callback=' + cbName + '&nocache=' + Date.now();
   script.onerror = function() {
     if (!done) { done = true; clearTimeout(timer); delete window[cbName]; }
   };
@@ -417,6 +417,7 @@ function loadConfig() {
 }
 
 function applyConfig(config) {
+      if (config.error) { console.error('Config load error:', config.error); return; }
       // עדכן מחירים גלובליים
       if (config.singlePrice) SINGLE_PRICE = config.singlePrice;
       if (config.setPrice)    SET_PRICE    = config.setPrice;
@@ -428,6 +429,12 @@ function applyConfig(config) {
       // עדכן תג מחיר על הרביעייה
       var setTag = document.getElementById('set-price-tag');
       if (setTag) setTag.innerHTML = SET_PRICE + '&nbsp;₪';
+
+      // עדכן מחירים בסקשן Pricing
+      var pricingSingle = document.getElementById('pricing-single');
+      if (pricingSingle) pricingSingle.textContent = SINGLE_PRICE + ' ₪';
+      var pricingSet = document.getElementById('pricing-set');
+      if (pricingSet) pricingSet.textContent = SET_PRICE + ' ₪';
 
       // עדכן נקודות איסוף
       if (config.pickups && config.pickups.length) {
@@ -539,31 +546,35 @@ function sendOrderWeb(e) {
     salads: SALAD_NAMES,
     quantities: qtys
   };
-  // תאימות לאחור — שלח גם q0-q3 לגיליון הקיים
-  for (var j = 0; j < 4; j++) { orderData['q' + j] = qtys[j] || 0; }
+  // שלח גם q0, q1, q2... לגיליון
+  for (var j = 0; j < qtys.length; j++) { orderData['q' + j] = qtys[j] || 0; }
 
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify(orderData)
   })
-  .then(function() {
-    // איפוס הטופס
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-phone').value = '';
-    document.getElementById('f-email').value = '';
-    document.getElementById('f-address').value = '';
-    document.getElementById('f-pickup').selectedIndex = 0;
-    document.getElementById('f-notes').value = '';
-    for (var k = 0; k < SALAD_NAMES.length; k++) {
-      var qEl = document.getElementById('q' + k);
-      if (qEl) qEl.textContent = '0';
-    }
-    document.getElementById('qset').textContent = '0';
-    document.getElementById('order-total').style.display = 'none';
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.result === 'success') {
+      // איפוס הטופס
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-phone').value = '';
+      document.getElementById('f-email').value = '';
+      document.getElementById('f-address').value = '';
+      document.getElementById('f-pickup').selectedIndex = 0;
+      document.getElementById('f-notes').value = '';
+      for (var k = 0; k < SALAD_NAMES.length; k++) {
+        var qEl = document.getElementById('q' + k);
+        if (qEl) qEl.textContent = '0';
+      }
+      document.getElementById('qset').textContent = '0';
+      document.getElementById('order-total').style.display = 'none';
 
-    alert('הזמנתך נשלחה בהצלחה!');
+      alert('הזמנתך נשלחה בהצלחה!');
+    } else {
+      alert('שגיאה בשליחת ההזמנה: ' + (data.message || 'אנא נסו שוב.'));
+    }
   })
   .catch(function() {
     alert('שגיאה בשליחת ההזמנה. אנא נסו שוב.');

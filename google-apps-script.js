@@ -13,11 +13,14 @@
 
 function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     var data = JSON.parse(e.postData.contents);
 
-    // חישוב סה"כ פריטים
-    var totalItems = (data.q0 || 0) + (data.q1 || 0) + (data.q2 || 0) + (data.q3 || 0) + (data.q4 || 0) * 4;
+    // חישוב סה"כ פריטים — תמיכה דינמית במספר סלטים משתנה
+    var quantities = data.quantities || [];
+    var singlesTotal = 0;
+    for (var i = 0; i < quantities.length; i++) { singlesTotal += (quantities[i] || 0); }
+    var totalItems = singlesTotal + (data.q4 || 0) * 4;
 
     // חישוב תאריך איסוף (יום שישי הקרוב)
     var now = new Date();
@@ -28,28 +31,30 @@ function doPost(e) {
     pickupDate.setDate(now.getDate() + daysUntilFriday);
     var pickupStr = Utilities.formatDate(pickupDate, "Asia/Jerusalem", "dd/MM/yyyy");
 
-    // הוספת שורה
-    sheet.appendRow([
+    // הוספת שורה — כמויות סלטים דינמיות (G ואילך)
+    var row = [
       Utilities.formatDate(now, "Asia/Jerusalem", "dd/MM/yyyy HH:mm"),  // A - חותמת זמן
       data.name,           // B - שם מלא
       data.phone,          // C - טלפון
       data.email || "",    // D - מייל
       data.address,        // E - כתובת
-      data.pickup,         // F - נקודת איסוף
-      data.q0 || 0,        // G - להבת הסלמון
-      data.q1 || 0,        // H - מטיאס ים תיכוני
-      data.q2 || 0,        // I - סלמון סקין
-      data.q3 || 0,        // J - מטיאס חרדלי
-      data.q4 || 0,        // K - רביעייה
-      totalItems,          // L - סה"כ פריטים
-      data.total,          // M - סה"כ ₪
-      data.notes || "",    // N - הערות
-      "לא שולם",           // O - שולם
-      "לא נמסר",           // P - נמסר
-      "לא נשלח",           // Q - נשלח לנקודת איסוף
-      pickupStr,           // R - תאריך איסוף
-      ""                   // S - הערות גיל
-    ]);
+      data.pickup          // F - נקודת איסוף
+    ];
+    // G ואילך — כמויות סלטים (דינמי)
+    for (var i = 0; i < quantities.length; i++) {
+      row.push(quantities[i] || 0);
+    }
+    // הבא אחרי הסלטים
+    row.push(data.q4 || 0);     // רביעייה
+    row.push(totalItems);        // סה"כ פריטים
+    row.push(data.total);        // סה"כ ₪
+    row.push(data.notes || "");  // הערות
+    row.push("לא שולם");         // שולם
+    row.push("לא נמסר");         // נמסר
+    row.push("לא נשלח");         // נשלח לנקודת איסוף
+    row.push(pickupStr);         // תאריך איסוף
+    row.push("");                // הערות גיל
+    sheet.appendRow(row);
 
     return ContentService
       .createTextOutput(JSON.stringify({ result: "success" }))
@@ -112,6 +117,12 @@ function doGet(e) {
     // תמיכה ב-JSONP לעקיפת CORS
     var cb = e && e.parameter && e.parameter.callback;
     if (cb) {
+      // וידוא שה-callback הוא שם פונקציה חוקי בלבד
+      if (!/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cb)) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ error: 'invalid callback' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
       return ContentService
         .createTextOutput(cb + '(' + JSON.stringify(config) + ')')
         .setMimeType(ContentService.MimeType.JAVASCRIPT);
@@ -123,7 +134,7 @@ function doGet(e) {
   } catch (err) {
     var cb = e && e.parameter && e.parameter.callback;
     var errJson = JSON.stringify({ error: err.toString() });
-    if (cb) {
+    if (cb && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cb)) {
       return ContentService
         .createTextOutput(cb + '(' + errJson + ')')
         .setMimeType(ContentService.MimeType.JAVASCRIPT);
