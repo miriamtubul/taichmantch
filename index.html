@@ -458,11 +458,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('image[href^="pictures/"]').forEach(function(img) {
     img.setAttribute('href', img.getAttribute('href') + '?v=' + ASSET_VERSION);
   });
-  // Fade-in images when loaded to avoid ugly flash
-  document.querySelectorAll('.salad-img, .hero-img img').forEach(function(img) {
-    if (img.complete) { img.classList.add('loaded'); }
-    else { img.addEventListener('load', function() { img.classList.add('loaded'); }); }
-  });
   loadConfig();
 });
 
