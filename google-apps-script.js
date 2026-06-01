@@ -20,7 +20,7 @@ function doPost(e) {
     var quantities = data.quantities || [];
     var singlesTotal = 0;
     for (var i = 0; i < quantities.length; i++) { singlesTotal += (quantities[i] || 0); }
-    var totalItems = singlesTotal + (data.q4 || 0) * 4;
+    var totalItems = singlesTotal + (data.q4 || 0) * 4 + (data.q6 || 0) * 6;
 
     // חישוב תאריך איסוף (יום שישי הקרוב)
     var now = new Date();
@@ -46,6 +46,7 @@ function doPost(e) {
     }
     // הבא אחרי הסלטים
     row.push(data.q4 || 0);     // רביעייה
+    row.push(data.q6 || 0);     // שישייה
     row.push(totalItems);        // סה"כ פריטים
     row.push(data.total);        // סה"כ ₪
     row.push(data.notes || "");  // הערות
@@ -81,8 +82,8 @@ function doGet(e) {
     if (!sheet) {
       // אם הגיליון לא קיים — צור אותו עם ערכי ברירת מחדל
       sheet = ss.insertSheet('הגדרות');
-      sheet.getRange('A1:D1').setValues([['נקודות איסוף', 'סלטים', 'מחיר יחיד', 'מחיר רביעייה']]);
-      sheet.getRange('A2:D2').setValues([['שערי תקווה', 'להבת הסלמון', 35, 120]]);
+      sheet.getRange('A1:E1').setValues([['נקודות איסוף', 'סלטים', 'מחיר יחיד', 'מחיר רביעייה', 'מחיר שישייה']]);
+      sheet.getRange('A2:E2').setValues([['שערי תקווה', 'להבת הסלמון', 35, 120, 180]]);
       sheet.getRange('A3:B8').setValues([
         ['רעננה',           'מטיאס ים תיכוני'],
         ['אליאב',           'סלמון סקין'],
@@ -106,12 +107,14 @@ function doGet(e) {
 
     var singlePrice = sheet.getRange('C2').getValue() || 35;
     var setPrice    = sheet.getRange('D2').getValue() || 120;
+    var set6Price   = sheet.getRange('E2').getValue() || 180;
 
     var config = {
       pickups: pickups,
       salads: salads,
       singlePrice: Number(singlePrice),
-      setPrice: Number(setPrice)
+      setPrice: Number(setPrice),
+      set6Price: Number(set6Price)
     };
 
     // תמיכה ב-JSONP לעקיפת CORS
