@@ -445,7 +445,7 @@
 // ====================================================
 // הדביקו כאן את ה-URL מ-Google Apps Script (Deploy → Web App)
 // ====================================================
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8l7o3b-xdJEODwlMcRoDPdbH3jh-oRpVBWXglQj92yjMERI-myOi0VQkvWO_8jcPW/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1p1mY9PJ7shb4VONCsH8MLhTpyv9ZUrsirotN25UE4ZZIfZ2kcSV14HgEexmViHAf/exec";
 
 var SALAD_NAMES = ['להבת הסלמון','מטיאס ים תיכוני','סלמון סקין','מטיאס חרדלי'];
 var SINGLE_PRICE = 35;
@@ -617,9 +617,8 @@ function sendOrderWeb(e) {
     email: email,
     address: address,
     pickup: pickup,
-    q4: totalQ4,
-    q6: totalQ6,
-    singlesRemainder: remainder,
+    manualSets4: manualQ4,
+    manualSets6: manualQ6,
     total: total,
     notes: notes,
     salads: SALAD_NAMES,
@@ -648,6 +647,7 @@ function sendOrderWeb(e) {
         if (qEl) qEl.textContent = '0';
       }
       document.getElementById('qset').textContent = '0';
+      document.getElementById('qset6').textContent = '0';
       document.getElementById('order-total').style.display = 'none';
 
       alert('הזמנתך נשלחה בהצלחה!');

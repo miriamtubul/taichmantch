@@ -17,14 +17,14 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
 
     // חישוב סה"כ פריטים
-    // הלקוח שולח q4/q6 כולל המרות אוטומטיות + singlesRemainder = בודדים שלא הומרו
+    // q4/q6 = רביעיות/שישיות ידניות בלבד (לא כולל המרה אוטומטית מבודדים)
+    // סה"כ פריטים = בודדים + ידני×4 + ידני×6
     var quantities = data.quantities || [];
     var singlesTotal = 0;
     for (var i = 0; i < quantities.length; i++) { singlesTotal += (quantities[i] || 0); }
-    var q4 = data.q4 || 0;
-    var q6 = data.q6 || 0;
-    var singlesRemainder = data.singlesRemainder || 0;
-    var totalItems = q4 * 4 + q6 * 6 + singlesRemainder;
+    var q4 = data.manualSets4 || 0;
+    var q6 = data.manualSets6 || 0;
+    var totalItems = singlesTotal + q4 * 4 + q6 * 6;
 
     // חישוב תאריך איסוף (יום שישי הקרוב)
     var now = new Date();
@@ -49,8 +49,8 @@ function doPost(e) {
       row.push(quantities[i] || 0);
     }
     // הבא אחרי הסלטים
-    row.push(q4);               // רביעייה (כולל המרות אוטומטיות)
-    row.push(q6);               // שישייה (כולל המרות אוטומטיות)
+    row.push(q4);               // רביעייה (ידנית בלבד)
+    row.push(q6);               // שישייה (ידנית בלבד)
     row.push(totalItems);        // סה"כ פריטים
     row.push(data.total);        // סה"כ ₪
     row.push(data.notes || "");  // הערות
