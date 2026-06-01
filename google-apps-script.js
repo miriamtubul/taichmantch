@@ -16,11 +16,15 @@ function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     var data = JSON.parse(e.postData.contents);
 
-    // חישוב סה"כ פריטים — תמיכה דינמית במספר סלטים משתנה
+    // חישוב סה"כ פריטים
+    // הלקוח שולח q4/q6 כולל המרות אוטומטיות + singlesRemainder = בודדים שלא הומרו
     var quantities = data.quantities || [];
     var singlesTotal = 0;
     for (var i = 0; i < quantities.length; i++) { singlesTotal += (quantities[i] || 0); }
-    var totalItems = singlesTotal + (data.q4 || 0) * 4 + (data.q6 || 0) * 6;
+    var q4 = data.q4 || 0;
+    var q6 = data.q6 || 0;
+    var singlesRemainder = data.singlesRemainder || 0;
+    var totalItems = q4 * 4 + q6 * 6 + singlesRemainder;
 
     // חישוב תאריך איסוף (יום שישי הקרוב)
     var now = new Date();
@@ -45,8 +49,8 @@ function doPost(e) {
       row.push(quantities[i] || 0);
     }
     // הבא אחרי הסלטים
-    row.push(data.q4 || 0);     // רביעייה
-    row.push(data.q6 || 0);     // שישייה
+    row.push(q4);               // רביעייה (כולל המרות אוטומטיות)
+    row.push(q6);               // שישייה (כולל המרות אוטומטיות)
     row.push(totalItems);        // סה"כ פריטים
     row.push(data.total);        // סה"כ ₪
     row.push(data.notes || "");  // הערות

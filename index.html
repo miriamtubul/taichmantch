@@ -445,7 +445,7 @@
 // ====================================================
 // הדביקו כאן את ה-URL מ-Google Apps Script (Deploy → Web App)
 // ====================================================
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJaA2BY1ykFMf8JftMZZfu3toSS6kPOGhudaVyEuGQGpPaBqeXqHkz-nBqE5likoqC/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8l7o3b-xdJEODwlMcRoDPdbH3jh-oRpVBWXglQj92yjMERI-myOi0VQkvWO_8jcPW/exec";
 
 var SALAD_NAMES = ['להבת הסלמון','מטיאס ים תיכוני','סלמון סקין','מטיאס חרדלי'];
 var SINGLE_PRICE = 35;
@@ -590,14 +590,16 @@ function sendOrderWeb(e) {
     var el = document.getElementById('q' + i);
     qtys.push(el ? parseInt(el.textContent) || 0 : 0);
   }
-  var q4 = parseInt(document.getElementById('qset').textContent) || 0;
-  var q6 = parseInt(document.getElementById('qset6').textContent) || 0;
+  var manualQ4 = parseInt(document.getElementById('qset').textContent) || 0;
+  var manualQ6 = parseInt(document.getElementById('qset6').textContent) || 0;
   var singleCount = qtys.reduce(function(a, b) { return a + b; }, 0);
   var autoSets6 = Math.floor(singleCount / 6);
   var afterSix = singleCount % 6;
   var autoSets4 = Math.floor(afterSix / 4);
   var remainder = afterSix % 4;
-  var total = (autoSets6 + q6) * SET6_PRICE + (autoSets4 + q4) * SET_PRICE + remainder * SINGLE_PRICE;
+  var totalQ4 = manualQ4 + autoSets4;
+  var totalQ6 = manualQ6 + autoSets6;
+  var total = totalQ6 * SET6_PRICE + totalQ4 * SET_PRICE + remainder * SINGLE_PRICE;
   if (pickup === 'משלוח עד הבית') total += 30;
 
   if (total === 0) { alert('אנא בחרו לפחות סלט אחד.'); return; }
@@ -615,8 +617,9 @@ function sendOrderWeb(e) {
     email: email,
     address: address,
     pickup: pickup,
-    q4: q4,
-    q6: q6,
+    q4: totalQ4,
+    q6: totalQ6,
+    singlesRemainder: remainder,
     total: total,
     notes: notes,
     salads: SALAD_NAMES,

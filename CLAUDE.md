@@ -15,7 +15,7 @@
 ## Google Apps Script
 
 - URL נוכחי (בשימוש ב-`index.html` שורה ~448):
-  `https://script.google.com/macros/s/AKfycbxJaA2BY1ykFMf8JftMZZfu3toSS6kPOGhudaVyEuGQGpPaBqeXqHkz-nBqE5likoqC/exec`
+  `https://script.google.com/macros/s/AKfycbw8l7o3b-xdJEODwlMcRoDPdbH3jh-oRpVBWXglQj92yjMERI-myOi0VQkvWO_8jcPW/exec`
 - `doPost` — מקבל הזמנות ומוסיף שורה לגיליון הראשי
 - `doGet` — מחזיר config (סלטים + נקודות איסוף + מחירים) מגיליון "הגדרות"
 - תמיכה ב-JSONP לעקיפת CORS (האתר משתמש ב-fetch)
