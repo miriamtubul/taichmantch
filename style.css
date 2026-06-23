@@ -201,6 +201,7 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
 .pricing-amount { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 36px; font-weight: 500; line-height: 1; color: var(--navy-deep); }
 .pricing-amount.coral { color: var(--coral); }
 .pricing-divider { width: 1px; background: var(--navy); opacity: 0.2; }
+.pricing-tuna-note { text-align: center; font-size: 13px; color: #C25B56; margin-top: 12px; font-weight: 600; }
 /* ── Kosher Bar ── */
 .kosher-bar {
   background: var(--paper);
