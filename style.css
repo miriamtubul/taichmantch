@@ -405,7 +405,7 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--cream-warm
   .pricing-amount { font-size: 22px; }
   .pricing-label { font-size: 10px; letter-spacing: 0.1em; margin-bottom: 2px; }
   .pricing-divider { width: 1px; align-self: stretch; }
-  .pricing-tuna-note { font-size: 12px; text-align: center; margin-top: 10px; }
+  .pricing-tuna-note { font-size: 10px; text-align: center; margin-top: 8px; color: #C25B56; width: 100%; }
 
   /* Order form */
   .order-section { padding: 32px 18px 48px; }
